@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use Test::More 0.88;
-use Test::Exception;
+use Test::Fatal;
 
 {
     package Foo;
@@ -23,23 +23,26 @@ use Test::Exception;
 
 {
     my $foo;
-    lives_ok(sub {
-        $foo = Foo->new(bar => 42);
-    });
+    is(
+        exception { $foo = Foo->new(bar => 42) },
+        undef,
+    );
     is($foo->baz, 43);
 }
 
 {
     my $foo;
-    lives_ok(sub {
-        $foo = Foo->new(baz => 23);
-    });
+    is(
+        exception { $foo = Foo->new(baz => 23) },
+        undef,
+    );
     is($foo->baz, 23);
 }
 
-throws_ok(sub {
-    Foo->new;
-}, qr/must be provided/);
+like(
+    exception { Foo->new },
+    qr/must be provided/,
+);
 
 {
     package Bar;
@@ -63,16 +66,18 @@ throws_ok(sub {
 {
     my $bar = Bar->new;
 
-    throws_ok(sub {
-        $bar->baz;
-    }, qr/must be provided/);
+    like(
+        exception { $bar->baz },
+        qr/must be provided/,
+    );
 
     $bar->foo(42);
 
     my $baz;
-    lives_ok(sub {
-        $baz = $bar->baz;
-    });
+    is(
+        exception { $baz = $bar->baz },
+        undef,
+    );
 
     is($baz, 43);
 }
@@ -110,16 +115,18 @@ SKIP:
 {
     my $bar = Quux->new;
 
-    throws_ok(sub {
-        $bar->baz;
-    }, qr/must be provided/);
+    like(
+        exception { $bar->baz },
+        qr/must be provided/,
+    );
 
     $bar->foo(42);
 
     my $baz;
-    lives_ok(sub {
-        $baz = $bar->baz;
-    });
+    is(
+        exception { $baz = $bar->baz },
+        undef,
+);
 
     is($baz, 43);
 }

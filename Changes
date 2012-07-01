@@ -1,3 +1,5 @@
+  * Convert uses of Test::Exception to Test::Fatal
+
 0.07  Mon, 04 Apr 2011 18:08:34 +0200
   * Allow this module to be used with attributes in roles when using Moose
     1.9900+ (Dave Rolsky).
