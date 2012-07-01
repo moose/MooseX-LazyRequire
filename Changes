@@ -1,3 +1,6 @@
+Change history for distribution {{$dist->name}}
+
+{{$NEXT}}
   * Convert uses of Test::Exception to Test::Fatal
   * Add TODO test for RT#76054 (thanks for the report, ilyuha!)
 
