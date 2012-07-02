@@ -1,6 +1,8 @@
 Change history for distribution {{$dist->name}}
 
 {{$NEXT}}
+
+0.08      2012-07-02 09:58:41 PDT-0700  (Karen Etheridge)
   * Convert uses of Test::Exception to Test::Fatal
   * Add TODO test for RT#76054 (thanks for the report, ilyuha!)
 
