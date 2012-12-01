@@ -4,6 +4,7 @@ Change history for distribution {{$dist->name}}
   * Invalid tests that failed on perl 5.17.6 have been fixed (they were always
     invalid, but the changes to hash key ordering only now made the tests
     start failing in an obvious way) (RT#81419)
+  * unnecessary dependency on MooseX::Types removed
 
 0.08      2012-07-02 09:58:41 PDT-0700  (Karen Etheridge)
   * Convert uses of Test::Exception to Test::Fatal

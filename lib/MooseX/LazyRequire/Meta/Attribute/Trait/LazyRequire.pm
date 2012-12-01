@@ -3,12 +3,11 @@ package MooseX::LazyRequire::Meta::Attribute::Trait::LazyRequire;
 
 use Moose::Role;
 use Carp qw/cluck/;
-use MooseX::Types::Moose qw/Bool/;
 use namespace::autoclean;
 
 has lazy_required => (
     is       => 'ro',
-    isa      => Bool,
+    isa      => 'Bool',
     required => 1,
     default  => 0,
 );
