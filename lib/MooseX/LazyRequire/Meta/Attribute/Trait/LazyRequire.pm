@@ -8,7 +8,6 @@ use namespace::autoclean;
 has lazy_required => (
     is       => 'ro',
     isa      => 'Bool',
-    required => 1,
     default  => 0,
 );
 
