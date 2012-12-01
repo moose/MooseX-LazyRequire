@@ -35,6 +35,7 @@ use Test::Fatal;
     is(
         exception { $foo = Foo->new(baz => 23) },
         undef,
+        'can set other attr explicitly without interfering',
     );
     is($foo->baz, 23);
 }
@@ -69,6 +70,7 @@ like(
     like(
         exception { $bar->baz },
         qr/must be provided/,
+        'lazy_required dependency is not satisfied',
     );
 
     $bar->foo(42);
@@ -77,9 +79,10 @@ like(
     is(
         exception { $baz = $bar->baz },
         undef,
+        'lazy_required dependency is satisfied',
     );
 
-    is($baz, 43);
+    is($baz, 43, 'builder uses correct value');
 }
 
 SKIP:
@@ -118,6 +121,7 @@ SKIP:
     like(
         exception { $bar->baz },
         qr/must be provided/,
+        'lazy_required dependency is not satisfied (in a role)',
     );
 
     $bar->foo(42);
@@ -126,9 +130,10 @@ SKIP:
     is(
         exception { $baz = $bar->baz },
         undef,
-);
+        'lazy_required dependency is satisfied (in a role)',
+    );
 
-    is($baz, 43);
+    is($baz, 43, 'builder uses correct value (in a role)');
 }
 }
 
