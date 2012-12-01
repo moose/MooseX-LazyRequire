@@ -23,10 +23,12 @@ after _process_options => sub {
 
     return unless $options->{lazy_required};
 
+    # lazy_required + default or builder doesn't make sense because if there
+    # is a default/builder, the reader will always be able to return a value.
     Moose->throw_error(
         "You may not use both a builder or a default and lazy_required for one attribute ($name)",
         data => $options,
-    ) if $options->{builder};
+    ) if $options->{builder} or $options->{default};
 
     $options->{ lazy     } = 1;
     $options->{ required } = 1;
