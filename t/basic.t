@@ -12,38 +12,21 @@ use Test::Fatal;
         is            => 'ro',
         lazy_required => 1,
     );
-
-    has baz => (
-        is      => 'ro',
-        builder => '_build_baz',
-    );
-
-    sub _build_baz { shift->bar + 1 }
 }
 
 {
-    my $foo;
     is(
-        exception { $foo = Foo->new(bar => 42) },
+        exception { Foo->new },
         undef,
+        'lazy_required attrs are not required until first accessed',
     );
-    is($foo->baz, 43);
-}
 
-{
-    my $foo;
-    is(
-        exception { $foo = Foo->new(baz => 23) },
-        undef,
-        'can set other attr explicitly without interfering',
+    like(
+        exception { Foo->new->bar },
+        qr/Attribute bar must be provided/,
+        'lazy_required value was not provided',
     );
-    is($foo->baz, 23);
 }
-
-like(
-    exception { Foo->new },
-    qr/Attribute bar must be provided/,
-);
 
 {
     package Bar;
