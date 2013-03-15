@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More;
 use Test::Fatal;
 
 local $TODO = 'RT#75054';
@@ -33,9 +33,13 @@ local $TODO = 'RT#75054';
 
 }
 my $r = AccountExt->new;
+
+my $e = exception { $r->password };
+isnt($e, undef, 'works on inherited attributes') &&
 like(
     exception { $r->password },
     qr/Attribute 'password' must be provided before calling reader/,
     'works on inherited attributes'
 );
 
+done_testing;
