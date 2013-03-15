@@ -1,6 +1,7 @@
 Change history for distribution {{$dist->name}}
 
 {{$NEXT}}
+  * use quotes around attribute name in error messages (David Precious)
 
 0.09      2012-12-01 14:16:14 PST-0800  (Karen Etheridge)
   * Invalid tests that failed on perl 5.17.6 have been fixed (they were always
