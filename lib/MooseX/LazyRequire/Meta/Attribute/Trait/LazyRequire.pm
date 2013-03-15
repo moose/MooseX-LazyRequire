@@ -31,7 +31,7 @@ after _process_options => sub {
     $options->{ lazy     } = 1;
     $options->{ required } = 1;
     $options->{ default  } = sub {
-        confess "Attribute $name must be provided before calling reader"
+        confess "Attribute '$name' must be provided before calling reader"
     };
 };
 
