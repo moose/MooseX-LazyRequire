@@ -35,7 +35,7 @@ local $TODO = 'RT#75054';
 my $r = AccountExt->new;
 like(
     exception { $r->password },
-    qr/Attribute password must be provided before calling reader/,
+    qr/Attribute 'password' must be provided before calling reader/,
     'works on inherited attributes'
 );
 

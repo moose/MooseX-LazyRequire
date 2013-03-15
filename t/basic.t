@@ -23,7 +23,7 @@ use Test::Fatal;
 
     like(
         exception { Foo->new->bar },
-        qr/Attribute bar must be provided/,
+        qr/Attribute 'bar' must be provided/,
         'lazy_required value was not provided',
     );
 }
@@ -52,7 +52,7 @@ use Test::Fatal;
 
     like(
         exception { $bar->baz },
-        qr/Attribute foo must be provided/,
+        qr/Attribute 'foo' must be provided/,
         'lazy_required dependency is not satisfied',
     );
 
@@ -103,7 +103,7 @@ SKIP:
 
     like(
         exception { $bar->baz },
-        qr/Attribute foo must be provided/,
+        qr/Attribute 'foo' must be provided/,
         'lazy_required dependency is not satisfied (in a role)',
     );
 
