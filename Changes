@@ -2,6 +2,7 @@ Change history for distribution {{$dist->name}}
 
 {{$NEXT}}
   - lots of cleanup of metadata
+  - canonical git repository is now https://github.com/moose/MooseX-LazyRequire
 
 0.10      2013-03-15 20:09:48Z
   - use quotes around attribute name in error messages (David Precious)
