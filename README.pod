@@ -1,8 +1,16 @@
-# NAME
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
 
 MooseX::LazyRequire - Required attributes which fail only when trying to use them
 
-# SYNOPSIS
+=head1 VERSION
+
+version 0.11
+
+=head1 SYNOPSIS
 
     package Foo;
 
@@ -22,24 +30,23 @@ MooseX::LazyRequire - Required attributes which fail only when trying to use the
     sub _build_bar { shift->foo }
 
 
-
     Foo->new(foo => 42); # succeeds, foo and bar will be 42
     Foo->new(bar => 42); # succeeds, bar will be 42
     Foo->new;            # fails, neither foo nor bare were given
 
-# DESCRIPTION
+=head1 DESCRIPTION
 
-This module adds a `lazy_required` option to Moose attribute declarations.
+This module adds a C<lazy_required> option to Moose attribute declarations.
 
 The reader methods for all attributes with that option will throw an exception
 unless a value for the attributes was provided earlier by a constructor
 parameter or through a writer method.
 
-# CAVEATS
+=head1 CAVEATS
 
 Prior to Moose 1.9900, roles didn't have an attribute metaclass, so this module can't
 easily apply its magic to attributes defined in roles. If you want to use
-`lazy_required` in role attributes, you'll have to apply the attribute trait
+C<lazy_required> in role attributes, you'll have to apply the attribute trait
 yourself:
 
     has foo => (
@@ -51,14 +58,47 @@ yourself:
 With Moose 1.9900, you can use this module in roles just the same way you can
 in classes.
 
-# AUTHORS
+=for Pod::Coverage init_meta
 
-- Florian Ragwitz <rafl@debian.org>
-- Dave Rolsky <autarch@urth.org>
+=head1 AUTHORS
 
-# COPYRIGHT AND LICENSE
+=over 4
 
-This software is copyright (c) 2013 by Florian Ragwitz.
+=item *
+
+Florian Ragwitz <rafl@debian.org>
+
+=item *
+
+Dave Rolsky <autarch@urth.org>
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2009 by Florian Ragwitz.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
+
+=head1 CONTRIBUTORS
+
+=for stopwords Karen Etheridge David Precious Jesse Luehrs
+
+=over 4
+
+=item *
+
+Karen Etheridge <ether@cpan.org>
+
+=item *
+
+David Precious <davidp@preshweb.co.uk>
+
+=item *
+
+Jesse Luehrs <doy@tozt.net>
+
+=back
+
+=cut
