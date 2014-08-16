@@ -1,5 +1,6 @@
 package MooseX::LazyRequire;
 # ABSTRACT: Required attributes which fail only when trying to use them
+# KEYWORDS: moose extension attribute required lazy defer populate method
 
 use Moose 0.94 ();
 use Moose::Exporter;
