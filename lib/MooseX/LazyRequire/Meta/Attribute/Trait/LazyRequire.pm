@@ -23,6 +23,12 @@ after _process_options => sub {
 
     return unless $options->{lazy_required};
 
+    $class->_enable_lazy_required($name, $options);
+};
+
+sub _enable_lazy_required {
+    my ($class, $name, $options) = @_;
+    
     # lazy_required + default or builder doesn't make sense because if there
     # is a default/builder, the reader will always be able to return a value.
     Moose->throw_error(
@@ -35,6 +41,25 @@ after _process_options => sub {
     $options->{ default  } = sub {
         confess "Attribute '$name' must be provided before calling reader"
     };
+};
+
+around clone_and_inherit_options => sub {
+    my ($orig, $self, %options) = @_;
+
+    if ($options{lazy_required}) {
+        $self->_enable_lazy_required($self->name, \%options);
+    } else {
+        for my $boolean_option (qw(lazy required)) {
+            if (!exists $options{$boolean_option}) {
+                $options{$boolean_option} = 0;
+            }
+        }
+        ### FIXME: can we say "no, don't provide a default"?
+        if (!exists $options{default}) {
+            $options{default} = undef;
+        }
+    }
+    $self->$orig(%options);
 };
 
 package # hide
