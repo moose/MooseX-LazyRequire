@@ -5,6 +5,7 @@ use Test::More 0.88;
 use Test::Fatal;
 
 {
+    # Our base class has an attribute that's nothing special.
     package Account;
     use Moose;
     use MooseX::LazyRequire;
@@ -14,6 +15,7 @@ use Test::Fatal;
         isa => 'Str',
     );
 
+    # The extended class wants you to specify a password.
     package AccountExt;
 
     use Moose;
@@ -29,7 +31,8 @@ use Test::Fatal;
         lazy_required => 1,
     );
 
-    package AccountExt::Lax;
+    # A further subclass will supply one for you if you don't specify one.
+    package AccountExt::Lax::Default;
     
     use Moose;
     extends 'AccountExt';
@@ -40,8 +43,9 @@ use Test::Fatal;
         default       => sub { 'hunter2' },
     );
 }
-my $r = AccountExt->new;
 
+# In the extension class, asking about a password generates an exception.
+my $r = AccountExt->new;
 my $e = exception { $r->password };
 isnt($e, undef, 'works on inherited attributes: exception') &&
 like(
@@ -50,6 +54,7 @@ like(
     'works on inherited attributes: mentions password by name'
 );
 
+# The lax subclass is happy to provide you with a default password.
 my $lax = AccountExt::Lax->new;
 is($lax->password, 'hunter2', 'We can override LazyRequired *off* as well');
 
