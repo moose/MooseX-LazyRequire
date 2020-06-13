@@ -119,6 +119,14 @@ my $attribute_ext = $account_ext->meta->find_attribute_by_name('password');
 ok($attribute_ext->lazy_required,
     'The inherited attribute is now lazy-required');
 
+# These subclasses turn lazy_required *off* again, sometimes adding in elements
+# that lazy_required provides.
+# The lax subclass is happy to provide you with a default password.
+my $account_ext_lax_default = AccountExt::Lax::Default->new;
+is($account_ext_lax_default->password,
+    'hunter2',
+    'We can override LazyRequired *off* as well');
+
 # The harsh subclass generates an exception as soon as you don't provide a
 # password.
 my $exception_harsh_constructor = exception { AccountExt::Harsh->new };
@@ -133,12 +141,6 @@ my $lazy = AccountExt::Lazy->new;
         'The lazy object resolves its default value as late as possible'
     );
 }
-
-# The lax subclass is happy to provide you with a default password.
-my $account_ext_lax_default = AccountExt::Lax::Default->new;
-is($account_ext_lax_default->password,
-    'hunter2',
-    'We can override LazyRequired *off* as well');
 
 # The woo subclass really wants to be the base subclass, but can't, because
 # a default option got in the way in the inheritance hierarchy.
