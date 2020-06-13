@@ -39,7 +39,7 @@ use namespace::autoclean;
     use MooseX::LazyRequire;
     extends 'Foo';
 
-    has foo => ( lazy_required => 0 );
+    has '+foo' => ( lazy_required => 0 );
 
     Foo::Nevermind->new;    # succeeds
 
