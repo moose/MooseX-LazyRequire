@@ -15,7 +15,7 @@ use Test::Fatal;
         isa => 'Str',
     );
 
-    # The extended class wants you to specify a password.
+    # The extended class wants you to specify a password, eventually.
     package AccountExt;
 
     use Moose;
@@ -25,9 +25,6 @@ use Test::Fatal;
 
     has '+password' => (
         is            => 'ro',
-        # Probably there also should be:
-        # traits => ['LazyRequire'],
-        # but I'm not sure
         lazy_required => 1,
     );
 
@@ -44,7 +41,8 @@ use Test::Fatal;
     );
 }
 
-# In the extension class, asking about a password generates an exception.
+# In the extension class, asking about a password generates an exception,
+# when you ask about it.
 my $account_ext = AccountExt->new;
 my $exception_ext = exception { $account_ext->password };
 isnt($exception_ext, undef, 'works on inherited attributes: exception') &&
@@ -53,6 +51,9 @@ like(
     qr/Attribute 'password' must be provided before calling reader/,
     'works on inherited attributes: mentions password by name'
 );
+my $attribute_ext = $account_ext->meta->find_attribute_by_name('password');
+ok($attribute_ext->lazy_required,
+    'The inherited attribute is now lazy-required');
 
 # The lax subclass is happy to provide you with a default password.
 my $account_ext_lax_default = AccountExt::Lax::Default->new;

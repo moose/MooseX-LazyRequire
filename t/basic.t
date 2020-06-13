@@ -4,6 +4,21 @@ use Test::More 0.88;
 use Test::Fatal;
 
 {
+    package Vanilla;
+    use Moose;
+    
+    has flavour => ( is => 'ro' );
+}
+
+{
+    my $vanilla   = Vanilla->new;
+    my $attribute = $vanilla->meta->find_attribute_by_name('flavour');
+    ok(!$attribute->can('lazy_required'),
+        q{If MooseX::LazyRequired isn't loaded, lazy_required isn't a method}
+    );
+}
+
+{
     package Foo;
     use Moose;
     use MooseX::LazyRequire;
@@ -12,6 +27,8 @@ use Test::Fatal;
         is            => 'ro',
         lazy_required => 1,
     );
+
+    has other_attribute => (is => 'ro');
 }
 
 {
@@ -25,6 +42,20 @@ use Test::Fatal;
         exception { Foo->new->bar },
         qr/Attribute 'bar' must be provided/,
         'lazy_required value was not provided',
+    );
+
+    my $foo = Foo->new;
+    my $attribute = $foo->meta->find_attribute_by_name('bar');
+    ok($attribute->can('lazy_required'),
+        'MooseX::LazyRequire is loaded, so we have a lazy_required method'
+    );
+    ok($attribute->lazy_required, 'This attribute is indeed lazy-required');
+
+    my $other_attribute = $foo->meta->find_attribute_by_name('other_attribute');
+    ok($other_attribute->can('lazy_required'),
+        'The other attribute therefore also has a lazy_required method');
+    ok(!$other_attribute->lazy_required,
+        q{The other attribute isn't lazy-required, though},
     );
 }
 
