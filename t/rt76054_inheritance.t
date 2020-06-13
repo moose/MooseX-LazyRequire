@@ -65,15 +65,25 @@ use Test::Fatal;
         lazy_required => 0,
         default       => sub { 'hunter2' },
     );
+
+    # But if you don't override the default, you're SOL.
+    package AccountExt::Lax::Woo;
+    
+    use Moose;
+    extends 'AccountExt';
+    use MooseX::LazyRequire;
+    
+    has '+password' => (lazy_required => 0);
 }
 
 # In the extension class, asking about a password generates an exception,
 # when you ask about it.
 my $account_ext = AccountExt->new;
-my $exception_ext = exception { $account_ext->password };
-isnt($exception_ext, undef, 'works on inherited attributes: exception') &&
-like(
-    $exception_ext,
+my $exception_ext_password = exception { $account_ext->password };
+isnt($exception_ext_password, undef,
+    'works on inherited attributes: exception')
+&& like(
+    $exception_ext_password,
     qr/Attribute 'password' must be provided before calling reader/,
     'works on inherited attributes: mentions password by name'
 );
@@ -101,5 +111,14 @@ my $account_ext_lax_default = AccountExt::Lax::Default->new;
 is($account_ext_lax_default->password,
     'hunter2',
     'We can override LazyRequired *off* as well');
+
+# The woo subclass really wants to be the base subclass, but can't, because
+# a default option got in the way in the inheritance hierarchy.
+my $exception_ext_woo_password = exception { AccountExt::Lax::Woo->new };
+like(
+    $exception_ext_woo_password,
+    qr/Attribute .+ password .+ \Qdoes not pass the type constraint\E/x,
+    'Falling back to undef as a last resort violates type constraints'
+);
 
 done_testing;
