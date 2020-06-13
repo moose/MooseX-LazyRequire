@@ -33,6 +33,16 @@ use namespace::autoclean;
     Foo->new(bar => 42); # succeeds, bar will be 42
     Foo->new;            # fails, neither foo nor bare were given
 
+    package Foo::Nevermind;
+    
+    use Moose;
+    use MooseX::LazyRequire;
+    extends 'Foo';
+    
+    has foo => ( lazy_required => 0 );
+    
+    Foo::Nevermind->new;    # succeeds
+
 =head1 DESCRIPTION
 
 This module adds a C<lazy_required> option to Moose attribute declarations.
@@ -40,6 +50,14 @@ This module adds a C<lazy_required> option to Moose attribute declarations.
 The reader methods for all attributes with that option will throw an exception
 unless a value for the attributes was provided earlier by a constructor
 parameter or through a writer method.
+
+You can override an attribute declaration in a parent class, either enabling
+or disabling lazy-required. Note, though, that becaus lazy_required works by
+declaring a default value that's evaluated lazily, if you say "never mind, this
+attribute isn't lazy-required any more", you I<still> need to provide a
+default value or coderef. B<Especially> if C<undef> isn't a valid value for
+your attribute, because that's what MooseX::LazyRequire will try to enforce
+in the absence of any better guidance.
 
 =head1 CAVEATS
 

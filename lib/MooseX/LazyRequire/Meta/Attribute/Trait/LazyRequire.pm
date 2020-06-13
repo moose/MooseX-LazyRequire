@@ -13,6 +13,9 @@ has lazy_required => (
     default  => 0,
 );
 
+# This will be called when a new attribute is created - i.e. when someone in
+# a Moose class says has attribute => ... for the first time.
+
 after _process_options => sub {
     my ($class, $name, $options) = @_;
 
@@ -43,18 +46,25 @@ sub _enable_lazy_required {
     };
 };
 
+# This will be called when someone says, in a subclass of a Moose class,
+# has '+attribute' => ...
+
 around clone_and_inherit_options => sub {
     my ($orig, $self, %options) = @_;
 
     if ($options{lazy_required}) {
         $self->_enable_lazy_required($self->name, \%options);
     } else {
+        # Disable lazy and required, unless we were told "actually, I like
+        # that part of lazy-required".
         for my $boolean_option (qw(lazy required)) {
             if (!exists $options{$boolean_option}) {
                 $options{$boolean_option} = 0;
             }
         }
-        ### FIXME: can we say "no, don't provide a default"?
+        # In desperation, if we haven't specified an alternative default
+        # value or coderef, claim that undef is fine. This may well not be,
+        # if the type of the attribute doesn't accept undef as a legal value.
         if (!exists $options{default}) {
             $options{default} = undef;
         }
