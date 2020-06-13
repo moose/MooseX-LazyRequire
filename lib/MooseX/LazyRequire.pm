@@ -52,7 +52,7 @@ unless a value for the attributes was provided earlier by a constructor
 parameter or through a writer method.
 
 You can override an attribute declaration in a parent class, either enabling
-or disabling lazy-required. Note, though, that becaus lazy_required works by
+or disabling lazy-required. Note, though, that because lazy_required works by
 declaring a default value that's evaluated lazily, if you say "never mind, this
 attribute isn't lazy-required any more", you I<still> need to provide a
 default value or coderef. B<Especially> if C<undef> isn't a valid value for
