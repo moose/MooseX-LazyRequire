@@ -54,7 +54,7 @@ around clone_and_inherit_options => sub {
 
     if ($options{lazy_required}) {
         $self->_enable_lazy_required($self->name, \%options);
-    } else {
+    } elsif (exists $options{lazy_required}) {
         # Disable lazy and required, unless we were told "actually, I like
         # that part of lazy-required".
         for my $boolean_option (qw(lazy required)) {

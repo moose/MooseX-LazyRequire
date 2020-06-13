@@ -4,8 +4,10 @@ use warnings;
 use Test::More 0.88;
 use Test::Fatal;
 
+my $default_description = 'Clearly nothing that you care about';
 {
-    # Our base class has an attribute that's nothing special.
+    # Our base class has an attribute that's nothing special, and another one
+    # that most of these tests will ignore.
     package Account;
     use Moose;
     use MooseX::LazyRequire;
@@ -13,6 +15,12 @@ use Test::Fatal;
     has password => (
         is  => 'rw',
         isa => 'Str',
+    );
+    has description => (
+        is      => 'rw',
+        isa     => 'Str',
+        lazy    => 1,
+        default => sub { $default_description }
     );
 
     # The extended class wants you to specify a password, eventually.
@@ -74,6 +82,26 @@ use Test::Fatal;
     use MooseX::LazyRequire;
 
     has '+password' => (lazy_required => 0);
+
+    # If you don't mention lazy_required *at all* when overriding an
+    # attribute, that's fine.
+    package Account::Logged;
+    
+    use Moose;
+    extends 'Account';
+    use MooseX::LazyRequire;
+    
+    has 'description_history' => (
+        is      => 'rw',
+        isa     => 'ArrayRef',
+        default => sub { [] },
+    );
+    has '+description' => (
+        trigger => sub {
+            my ($self, $new_value, $old_value) = @_;
+            push @{ $self->description_history }, $new_value;
+        }
+    );
 }
 
 # In the extension class, asking about a password generates an exception,
@@ -120,5 +148,14 @@ like(
     qr/Attribute .+ password .+ \Qdoes not pass the type constraint\E/x,
     'Falling back to undef as a last resort violates type constraints'
 );
+
+# We don't mess with attributes in classes that use MooseX::LazyRequire but
+# don't set lazy_require explicitly, not even when subclassing attributes.
+my $logged = Account::Logged->new;
+is($logged->description, $default_description,
+    'When lazy_required is omitted entirely, the default etc. is unaffected');
+$logged->description('Now for something else');
+is($logged->description_history->[0], 'Now for something else',
+    'The trigger fired, though, so we *did* change that attribute');
 
 done_testing;
