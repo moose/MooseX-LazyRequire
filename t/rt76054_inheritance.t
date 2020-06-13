@@ -29,11 +29,11 @@ use Test::Fatal;
 
     # A further subclass insists that you supply the password immediately.
     package AccountExt::Harsh;
-    
+
     use Moose;
     extends 'AccountExt';
     use MooseX::LazyRequire;
-    
+
     has '+password' => (
         is            => 'ro',
         lazy_required => 0,
@@ -42,11 +42,11 @@ use Test::Fatal;
 
     # Another subclass makes the attribute lazy.
     package AccountExt::Lazy;
-    
+
     use Moose;
     extends 'AccountExt';
     use MooseX::LazyRequire;
-    
+
     $AccountExt::Lazy::default_password = 'password';
     has '+password' => (
         lazy_required => 0,
@@ -56,7 +56,7 @@ use Test::Fatal;
 
     # Another subclass will supply one for you if you don't specify one.
     package AccountExt::Lax::Default;
-    
+
     use Moose;
     extends 'AccountExt';
     use MooseX::LazyRequire;
@@ -68,11 +68,11 @@ use Test::Fatal;
 
     # But if you don't override the default, you're SOL.
     package AccountExt::Lax::Woo;
-    
+
     use Moose;
     extends 'AccountExt';
     use MooseX::LazyRequire;
-    
+
     has '+password' => (lazy_required => 0);
 }
 

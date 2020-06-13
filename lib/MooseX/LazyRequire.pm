@@ -34,13 +34,13 @@ use namespace::autoclean;
     Foo->new;            # fails, neither foo nor bare were given
 
     package Foo::Nevermind;
-    
+
     use Moose;
     use MooseX::LazyRequire;
     extends 'Foo';
-    
+
     has foo => ( lazy_required => 0 );
-    
+
     Foo::Nevermind->new;    # succeeds
 
 =head1 DESCRIPTION

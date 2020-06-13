@@ -31,7 +31,7 @@ after _process_options => sub {
 
 sub _enable_lazy_required {
     my ($class, $name, $options) = @_;
-    
+
     # lazy_required + default or builder doesn't make sense because if there
     # is a default/builder, the reader will always be able to return a value.
     Moose->throw_error(

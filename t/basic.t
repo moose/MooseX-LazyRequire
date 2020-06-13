@@ -6,7 +6,7 @@ use Test::Fatal;
 {
     package Vanilla;
     use Moose;
-    
+
     has flavour => ( is => 'ro' );
 }
 
