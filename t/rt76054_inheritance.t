@@ -86,11 +86,11 @@ my $default_description = 'Clearly nothing that you care about';
     # If you don't mention lazy_required *at all* when overriding an
     # attribute, that's fine.
     package Account::Logged;
-    
+
     use Moose;
     extends 'Account';
     use MooseX::LazyRequire;
-    
+
     has 'description_history' => (
         is      => 'rw',
         isa     => 'ArrayRef',
