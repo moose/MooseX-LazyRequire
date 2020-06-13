@@ -21,14 +21,26 @@ use Test::Fatal;
     use Moose;
     extends 'Account';
     use MooseX::LazyRequire;
-    use Carp;
 
     has '+password' => (
         is            => 'ro',
         lazy_required => 1,
     );
 
-    # A further subclass will supply one for you if you don't specify one.
+    # A further subclass insists that you supply the password immediately.
+    package AccountExt::Harsh;
+    
+    use Moose;
+    extends 'AccountExt';
+    use MooseX::LazyRequire;
+    
+    has '+password' => (
+        is            => 'ro',
+        lazy_required => 0,
+        required      => 1,
+    );
+
+    # Another subclass will supply one for you if you don't specify one.
     package AccountExt::Lax::Default;
     
     use Moose;
@@ -54,6 +66,12 @@ like(
 my $attribute_ext = $account_ext->meta->find_attribute_by_name('password');
 ok($attribute_ext->lazy_required,
     'The inherited attribute is now lazy-required');
+
+# The harsh subclass generates an exception as soon as you don't provide a
+# password.
+my $exception_harsh_constructor = exception { AccountExt::Harsh->new };
+isnt($exception_harsh_constructor, undef,
+    'Cannot create a harsh object without a password');
 
 # The lax subclass is happy to provide you with a default password.
 my $account_ext_lax_default = AccountExt::Lax::Default->new;
