@@ -45,17 +45,19 @@ use Test::Fatal;
 }
 
 # In the extension class, asking about a password generates an exception.
-my $r = AccountExt->new;
-my $e = exception { $r->password };
-isnt($e, undef, 'works on inherited attributes: exception') &&
+my $account_ext = AccountExt->new;
+my $exception_ext = exception { $account_ext->password };
+isnt($exception_ext, undef, 'works on inherited attributes: exception') &&
 like(
-    exception { $r->password },
+    $exception_ext,
     qr/Attribute 'password' must be provided before calling reader/,
     'works on inherited attributes: mentions password by name'
 );
 
 # The lax subclass is happy to provide you with a default password.
-my $lax = AccountExt::Lax->new;
-is($lax->password, 'hunter2', 'We can override LazyRequired *off* as well');
+my $account_ext_lax_default = AccountExt::Lax::Default->new;
+is($account_ext_lax_default->password,
+    'hunter2',
+    'We can override LazyRequired *off* as well');
 
 done_testing;
